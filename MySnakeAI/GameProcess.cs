@@ -322,10 +322,30 @@ namespace MySnakeAI
             }
             
             var r = AgentDecision();
-            if (r == 0) { snake.dirX = 0; snake.dirY = -1; } //Up
-            if (r == 1) { snake.dirX = 1; snake.dirY = 0; } //Right
-            if (r == 2) { snake.dirX = 0; snake.dirY = 1; } //Down
-            if (r == 3) { snake.dirX = -1; snake.dirY = 0; } //Left
+            if (r == 0) //Up
+            { 
+                snake.dirX = 0;
+                if (snake.dirY != 1)
+                    snake.dirY = -1;
+            } 
+            if (r == 1) //Right
+            { 
+                snake.dirY = 0;
+                if (snake.dirX != -1)
+                    snake.dirX = 1;
+            } 
+            if (r == 2) //Down
+            { 
+                snake.dirX = 0;
+                if (snake.dirY != -1)
+                    snake.dirY = 1;
+            } //Left
+            if (r == 3) 
+            { 
+                snake.dirY = 0;
+                if (snake.dirX != 1)
+                    snake.dirX = -1;
+            } 
         }
         public static int AgentDecision()
         {

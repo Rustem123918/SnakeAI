@@ -45,7 +45,7 @@ namespace MySnakeAI
         private Label Generation;
         private static int gen = 1;
         private Timer timer;
-        private int who = 3; //1-human; 2-lee; 3-AI
+        private int who = 2; //1-human; 2-lee; 3-AI
         private PictureBox[] call; //с какой стороны находится препятсвие
         private PictureBox[] ball; //положение фрукта относительно головы змейки
                                    //private Dictionary<string, Bitmap> images = new Dictionary<string, Bitmap>();
