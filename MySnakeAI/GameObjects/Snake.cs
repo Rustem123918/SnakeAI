@@ -36,6 +36,19 @@ namespace MySnakeAI
         {
             if (!CheckOutOfBorders() && !EatItSelf())
             {
+                //if(GameProcess.Score >=1)
+                //{
+                //    Point prev = Body[1].Location;
+                //    Body[1].Location = Body[0].Location;
+                //    Point prev2;
+                //    for (int i = 1; i < GameProcess.Score; i++)
+                //    {
+                //        prev2 = Body[i].Location;
+                //        Body[i].Location = prev;
+                //        prev = prev2;
+                //    }
+                //}
+
                 int a = 0;
                 for (int i = GameProcess.Score; i >= 1; i--)
                 {
@@ -49,7 +62,7 @@ namespace MySnakeAI
                     //Вычисляем направление хвоста
                     Body[i].Location = Body[i - 1].Location;
                 }
-                head.Location = new Point(head.Location.X + dirX * ElementSize,
+                    head.Location = new Point(head.Location.X + dirX * ElementSize,
                    head.Location.Y + dirY * ElementSize);
             }
             else
@@ -65,33 +78,12 @@ namespace MySnakeAI
                 head.Location.Y + dirY * ElementSize >= MapHeight * ElementSize)
                 return true;
 
-            if (head.Location.Y == 0) SnakeWindow.up = 1;
-            else SnakeWindow.up = 0;
-            if (head.Location.Y == (MapHeight - 1) * ElementSize) SnakeWindow.down = 1;
-            else SnakeWindow.down = 0;
-            if (head.Location.X == 0) SnakeWindow.left = 1;
-            else SnakeWindow.left = 0;
-            if (head.Location.X == (MapWidth - 1) * ElementSize) SnakeWindow.right = 1;
-            else SnakeWindow.right = 0;
-
             return false;
         }
         private bool EatItSelf()
         {
             for(int i = 1; i<=GameProcess.Score; i++)
             {
-                if (i == 1)
-                {
-                    if (SnakeWindow.up == 1 || head.Location.Y - ElementSize == Body[1].Location.Y) SnakeWindow.up = 1;
-                    else SnakeWindow.up = 0;
-                    if (SnakeWindow.down == 1 || head.Location.Y + ElementSize == Body[1].Location.Y) SnakeWindow.down = 1;
-                    else SnakeWindow.down = 0;
-                    if (SnakeWindow.left == 1 || head.Location.X - ElementSize == Body[1].Location.X) SnakeWindow.left = 1;
-                    else SnakeWindow.left = 0;
-                    if (SnakeWindow.right == 1 || head.Location.X + ElementSize == Body[1].Location.X) SnakeWindow.right = 1;
-                    else SnakeWindow.right = 0;
-                }
-
                 if (head.Location == Body[i].Location) return true;
             }
             return false;

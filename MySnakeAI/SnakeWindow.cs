@@ -45,6 +45,7 @@ namespace MySnakeAI
         private Label Generation;
         private static int gen = 1;
         private Timer timer;
+        private int time_delay = 50;
         private int who = 2; //1-human; 2-lee; 3-AI
         private PictureBox[] call; //с какой стороны находится препятсвие
         private PictureBox[] ball; //положение фрукта относительно головы змейки
@@ -104,7 +105,7 @@ namespace MySnakeAI
             }
 
             timer = new Timer();
-            timer.Interval = 50;
+            timer.Interval = time_delay;
             timer.Tick += TimerTick;
             timer.Start();
         }
@@ -220,6 +221,20 @@ namespace MySnakeAI
         }
         private void TimerTick(object sender, EventArgs args)
         {
+            ul = 0;
+            u = 0;
+            ur = 0;
+            r = 0;
+            dr = 0;
+            d = 0;
+            dl = 0;
+            l = 0;
+
+            up = 0;
+            right = 0;
+            down = 0;
+            left = 0;
+
             if (snake.Body[0].Location.X > fruit.Body.Location.X && snake.Body[0].Location.Y > fruit.Body.Location.Y) ul = 1;
             else ul = 0;
             if (snake.Body[0].Location.X == fruit.Body.Location.X && snake.Body[0].Location.Y > fruit.Body.Location.Y) u = 1;
@@ -236,6 +251,41 @@ namespace MySnakeAI
             else dl = 0;
             if (snake.Body[0].Location.X > fruit.Body.Location.X && snake.Body[0].Location.Y == fruit.Body.Location.Y) l = 1;
             else l = 0;
+
+            if (snake.Body[0].Location.Y == 0) up = 1;
+            else up = 0;
+            if (snake.Body[0].Location.Y == (MapHeight - 1) * ElementSize) down = 1;
+            else down = 0;
+            if (snake.Body[0].Location.X == 0) left = 1;
+            else left = 0;
+            if (snake.Body[0].Location.X == (MapWidth - 1) * ElementSize) right = 1;
+            else right = 0;
+
+            for (int i = 1; i <= GameProcess.Score; i++)
+            {
+                int deltaY = snake.Body[i].Location.Y - snake.Body[0].Location.Y;
+                int deltaX = snake.Body[i].Location.X - snake.Body[0].Location.X;
+                if (up == 0)
+                {
+                    if (deltaY == -ElementSize && deltaX == 0) up = 1;
+                    else up = 0;
+                }
+                if (down == 0)
+                {
+                    if (deltaY == ElementSize && deltaX == 0) down = 1;
+                    else down = 0;
+                }
+                if (left == 0)
+                {
+                    if (deltaX == -ElementSize && deltaY == 0) left = 1;
+                    else left = 0;
+                }
+                if (right == 0)
+                {
+                    if (deltaX == ElementSize && deltaY == 0) right = 1;
+                    else right = 0;
+                }
+            }
 
             if (up == 1) call[0].BackColor = Color.Gray;
             else call[0].BackColor = Color.Black;
@@ -266,10 +316,23 @@ namespace MySnakeAI
             if (who == 1) PlayHuman();
             else if (who == 2) PlayLee();
             else if (who == 3) PlayAI();
+            //if (GameProcess.EPSILON > 0.005)
+            //    PlayAI();
+            //else
+            //{
+            //    if (GameProcess.AlgorithmLee(snake, snake.Body[0].Location.X / ElementSize, snake.Body[0].Location.Y / ElementSize,
+            //                                    fruit.Body.Location.X / ElementSize, fruit.Body.Location.Y / ElementSize))
+            //    {
+            //        PlayLee();
+            //    }
+            //    else
+            //        PlayAI();
+            //}
             //Invalidate();
         }
         private void PlayHuman()
         {
+            
             this.KeyDown += ActionWithKeyDown;
             if (snake.IsDead)
             {
@@ -333,8 +396,8 @@ namespace MySnakeAI
                     labelAI.Text = "AI: " + GameProcess.AIRecord;
                 }
                 gen++;
-                GameProcess.EPSILON -= 0.01;
-                if (GameProcess.EPSILON <= 0.01) GameProcess.EPSILON = 0.01;
+                
+                if (GameProcess.EPSILON > 0.005) GameProcess.EPSILON -= 0.005;
                 GameRestart();
             }
             double reward = 0;

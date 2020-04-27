@@ -126,11 +126,11 @@ namespace MySnakeAI
         //В этом блоке кода будет алгоритм Ли
 
         //В этом блоке кода будет алгоритм Q-Learning
-        public static double GAMMA = 0.75; //0.75
-        public static double ALPHA = 0.01;
+        public static double GAMMA = 0.75; //0.75 влияние будущей награды
+        public static double ALPHA = 0.01; // - скорость обучения
         public static double EPSILON = 0.9;
         public static double[] rewards = { 10, 1, -1, -100 }; //10 - съел фрукт, 1 - приблизился к фрукту, -1 - удалился от фрукта, -100 - умер
-        public static State[] states = new State[129];
+        public static State[] states = new State[144];
         public static State currentState;
         public static Dictionary<State, Action> Q = new Dictionary<State, Action>();
         public static void InitStates()
@@ -280,10 +280,71 @@ namespace MySnakeAI
             }
             states[128] = new State(); //Частный случай
 
+            states[129] = new State();
+            states[129].obst[0] = 1;
+
+            states[130] = new State();
+            states[130].obst[1] = 1;
+
+            states[131] = new State();
+            states[131].obst[0] = 1;
+            states[131].obst[1] = 1;
+
+            states[132] = new State();
+            states[132].obst[2] = 1;
+
+            states[133] = new State();
+            states[133].obst[0] = 1;
+            states[133].obst[2] = 1;
+
+            states[134] = new State();
+            states[134].obst[1] = 1;
+            states[134].obst[2] = 1;
+
+            states[135] = new State();
+            states[135].obst[0] = 1;
+            states[135].obst[1] = 1;
+            states[135].obst[2] = 1;
+
+            states[136] = new State();
+            states[136].obst[3] = 1;
+
+            states[137] = new State();
+            states[137].obst[0] = 1;
+            states[137].obst[3] = 1;
+
+            states[138] = new State();
+            states[138].obst[1] = 1;
+            states[138].obst[3] = 1;
+
+            states[139] = new State();
+            states[139].obst[0] = 1;
+            states[139].obst[1] = 1;
+            states[139].obst[3] = 1;
+
+            states[140] = new State();
+            states[140].obst[2] = 1;
+            states[140].obst[3] = 1;
+
+            states[141] = new State();
+            states[141].obst[0] = 1;
+            states[141].obst[2] = 1;
+            states[141].obst[3] = 1;
+
+            states[142] = new State();
+            states[142].obst[1] = 1;
+            states[142].obst[2] = 1;
+            states[142].obst[3] = 1;
+
+            states[143] = new State();
+            states[143].obst[0] = 1;
+            states[143].obst[1] = 1;
+            states[143].obst[2] = 1;
+            states[143].obst[3] = 1;
         }
         public static void InitQ()
         {
-            for (int i = 0; i < 129; i++)
+            for (int i = 0; i < 144; i++)
             {
                 Q.Add(states[i], new Action());
             }
@@ -304,15 +365,16 @@ namespace MySnakeAI
             currentState.fruitLoc[6] = SnakeWindow.dl;
             currentState.fruitLoc[7] = SnakeWindow.l;
 
+            //Какому состоянию из словаря соответствует currentState 
             bool obstTrue = true;
             bool fruitTrue = true;
-            for(int i = 0; i < 129; i++)
+            for (int i = 0; i < 129; i++)
             {
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     if (states[i].obst[j] != currentState.obst[j]) { obstTrue = false; break; }
                 }
-                for(int t = 0; t < 8; t++)
+                for (int t = 0; t < 8; t++)
                 {
                     if (states[i].fruitLoc[t] != currentState.fruitLoc[t]) { fruitTrue = false; break; }
                 }
@@ -320,7 +382,7 @@ namespace MySnakeAI
                 obstTrue = true;
                 fruitTrue = true;
             }
-            
+
             var r = AgentDecision();
             if (r == 0) //Up
             { 
