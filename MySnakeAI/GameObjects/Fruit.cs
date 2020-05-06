@@ -1,48 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MySnakeAI
 {
     public class Fruit
     {
-        private const int ElementSize = GameProcess.ElementSize;
-        private const int MapWidth = GameProcess.MapWidth;
-        private const int MapHeight = GameProcess.MapHeight;
-
-        private int currentX;
-        private int currentY;
-        public int rX;
-        public int rY;
+        public int X;
+        public int Y;
         public PictureBox Body;
-        public Fruit()
-        {
-            GenerateFruit();
+        public Fruit(Snake snake, Map map)
+        { 
             Body = new PictureBox();
-            Body.Size = new Size(ElementSize, ElementSize);
-            Body.Location = new Point(rX, rY);
+            Body.Size = new Size(map.ElementSize, map.ElementSize);
             Body.BackColor = Color.Green;
+            Spawn(snake, map);
         }
-        public void Move(Snake snake)
+        public void Spawn(Snake snake, Map map)
         {
-            GenerateFruit();
-            for (int i = 0; i<=GameProcess.Score; i++)
+            var rnd = new Random();
+            X = rnd.Next(0, map.Width - 1);
+            Y = rnd.Next(0, map.Height - 1);
+            for (int i = 0; i < snake.Body.Count; i++)
             {
-                if (new Point(rX, rY) == snake.Body[i].Location || (rX == currentX && rY == currentY)) { GenerateFruit(); i = 0; }
+                if (new Point(X * map.ElementSize, Y * map.ElementSize) == snake.Body[i].Location)
+                {
+                    X = rnd.Next(0, map.Width - 1);
+                    Y = rnd.Next(0, map.Height - 1);
+                    i = 0; 
+                }
             }
-            currentX = rX;
-            currentY = rY;
-            Body.Location = new Point(rX, rY);
-        }
-        private void GenerateFruit()
-        {
-            Random rnd = new Random();
-            rX = rnd.Next(0, MapWidth-1) * ElementSize;
-            rY = rnd.Next(0, MapWidth-1) * ElementSize;
+            Body.Location = new Point(X * map.ElementSize, Y * map.ElementSize);
         }
     }
 }

@@ -1,92 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MySnakeAI
 {
+    public enum SnakeDirection
+    {
+        STOP = 0, 
+        UP = 1, 
+        RIGHT = 2, 
+        DOWN = 3, 
+        LEFT = 4
+    }
     public class Snake
     {
-        private const int ElementSize = GameProcess.ElementSize;
-        private const int MapWidth = GameProcess.MapWidth;
-        private const int MapHeight = GameProcess.MapHeight;
-        
-        public bool IsDead;
-        public int dirX;
-        public int dirY;
-        public int LastdirX;
-        public int LastdirY;
-        public PictureBox[] Body = new PictureBox[MapHeight * MapWidth];
-        private PictureBox head;
-        public Snake()
+        public int X;
+        public int Y;
+        public SnakeDirection Dir;
+        public List<PictureBox> Body;
+        public Snake(Map map)
         {
-            IsDead = false;
-            dirX = 1;
-            dirY = 0;
-            Body[0] = new PictureBox();
-            Body[0].Size = new Size(ElementSize-1, ElementSize-1);
-            Body[0].Location = new Point(ElementSize*MapWidth/2, ElementSize * MapHeight / 2);
+            Body = new List<PictureBox>();
+            Body.Add(new PictureBox());
+            Body[0].Size = new Size(map.ElementSize - 1, map.ElementSize - 1);
             Body[0].BackColor = Color.Black;
-            head = Body[0];
+            Spawn(map);
         }
-        public void Move()
+        public void Spawn(Map map)
         {
-            if (!CheckOutOfBorders() && !EatItSelf())
+            if(Body.Count>1)
+                Body.RemoveRange(1, Body.Count - 1);
+            Dir = SnakeDirection.STOP;
+            X = map.Width / 2;
+            Y = map.Height / 2;
+            Body[0].Location = new Point(X * map.ElementSize, Y * map.ElementSize);
+        }
+        public void Move(Map map)
+        {
+            if (Body.Count >= 2)
             {
-                //if(GameProcess.Score >=1)
-                //{
-                //    Point prev = Body[1].Location;
-                //    Body[1].Location = Body[0].Location;
-                //    Point prev2;
-                //    for (int i = 1; i < GameProcess.Score; i++)
-                //    {
-                //        prev2 = Body[i].Location;
-                //        Body[i].Location = prev;
-                //        prev = prev2;
-                //    }
-                //}
-
-                int a = 0;
-                for (int i = GameProcess.Score; i >= 1; i--)
+                Point prev = Body[1].Location;
+                Body[1].Location = Body[0].Location;
+                Point prev2;
+                for (int i = 2; i < Body.Count; i++)
                 {
-                    //Вычисляем направление хвоста
-                    if (a == 0 && GameProcess.Score > 2)
-                    {
-                        LastdirX = (Body[i - 1].Location.X - Body[i].Location.X) / ElementSize;
-                        LastdirY = (Body[i - 1].Location.Y - Body[i].Location.Y) / ElementSize;
-                        a = 1;
-                    }
-                    //Вычисляем направление хвоста
-                    Body[i].Location = Body[i - 1].Location;
+                    prev2 = Body[i].Location;
+                    Body[i].Location = prev;
+                    prev = prev2;
                 }
-                    head.Location = new Point(head.Location.X + dirX * ElementSize,
-                   head.Location.Y + dirY * ElementSize);
             }
-            else
-            {
-                IsDead = true;
-            }
-        }
-        private bool CheckOutOfBorders() //true - выход за границы, false - не вышел за границы
-        {
-            if (head.Location.X + dirX * ElementSize < 0 || 
-                head.Location.X + dirX * ElementSize >= MapWidth * ElementSize ||
-                head.Location.Y + dirY * ElementSize < 0 || 
-                head.Location.Y + dirY * ElementSize >= MapHeight * ElementSize)
-                return true;
 
-            return false;
-        }
-        private bool EatItSelf()
-        {
-            for(int i = 1; i<=GameProcess.Score; i++)
+            switch(Dir)
             {
-                if (head.Location == Body[i].Location) return true;
+                case SnakeDirection.UP:
+                    Y--;
+                    break;
+                case SnakeDirection.RIGHT:
+                    X++;
+                    break;
+                case SnakeDirection.DOWN:
+                    Y++;
+                    break;
+                case SnakeDirection.LEFT:
+                    X--;
+                    break;
             }
-            return false;
+            Body[0].Location = new Point(X * map.ElementSize, Y * map.ElementSize);
         }
     }
 }
