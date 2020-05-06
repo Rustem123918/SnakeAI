@@ -20,7 +20,7 @@ namespace MySnakeAI
         public Fruit fruit;
         public AlgorithmLee alg_lee;
         public QLearning q_learn;
-        public NeuralNetwork.NeuralNetwork neuralNetwork;
+        public NeuralNetwork neuralNetwork;
 
         public int Score;
         public int MaxScore;
@@ -57,8 +57,8 @@ namespace MySnakeAI
             else if (Who == 4)
             {
                 q_learn = new QLearning();
-                var topology = new NeuralNetwork.Topology(12, 4, 0.1, 6);
-                neuralNetwork = new NeuralNetwork.NeuralNetwork(topology);
+                var topology = new Topology(12, 4, 0.1, 6);
+                neuralNetwork = new NeuralNetwork(topology);
                 var dataSet = new List<Tuple<List<double>, List<double>>>();
 
                 var strs = File.ReadLines("Records\\DataSet2.txt").ToList();

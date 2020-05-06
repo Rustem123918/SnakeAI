@@ -48,6 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlgorithmLee.cs" />
+    <Compile Include="NeuralNetwork\Layer.cs" />
+    <Compile Include="NeuralNetwork\NeuralNetwork.cs" />
+    <Compile Include="NeuralNetwork\Neuron.cs" />
+    <Compile Include="NeuralNetwork\NeuronType.cs" />
+    <Compile Include="NeuralNetwork\Topology.cs" />
     <Compile Include="QLearning\Action.cs" />
     <Compile Include="GameObjects\Fruit.cs" />
     <Compile Include="GameObjects\Map.cs" />
@@ -88,11 +93,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\NeuralNetwork\NeuralNetwork.csproj">
-      <Project>{d172a358-8700-4135-9187-d6aa3459c691}</Project>
-      <Name>NeuralNetwork</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
